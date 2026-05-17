@@ -1,0 +1,140 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║                                                                            ║
+║              SMART JOB MATCH AGENT - LOCAL FREE VERSION                   ║
+║                                                                            ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+This project is a fully local job recommendation system built using:
+
+✅ TF-IDF Vectorization
+✅ Cosine Similarity
+✅ Rule-Based Resume Parsing
+✅ FastAPI Backend
+✅ Simple Web Interface
+
+No paid APIs or external AI services are required.
+
+═══════════════════════════════════════════════════════════════════════════════
+
+GETTING STARTED
+
+1. Open QUICK_START.md
+2. Follow the setup steps
+3. Run the server
+4. Open the web application in your browser
+
+═══════════════════════════════════════════════════════════════════════════════
+
+WHAT THE PROJECT DOES
+
+The system:
+
+• Accepts resume text as input
+• Extracts skills and experience
+• Matches resumes with available jobs
+• Ranks the top matching jobs
+• Generates match explanations
+• Asks a follow-up clarification question
+
+═══════════════════════════════════════════════════════════════════════════════
+
+TECHNOLOGIES USED
+
+✅ Python
+✅ FastAPI
+✅ scikit-learn
+✅ TF-IDF Vectorization
+✅ Cosine Similarity
+✅ HTML / CSS / JavaScript
+
+═══════════════════════════════════════════════════════════════════════════════
+
+FEATURES
+
+✅ Fully local execution
+✅ No API keys required
+✅ No monthly costs
+✅ No rate limits
+✅ Simple setup
+✅ Interactive frontend UI
+✅ REST API support
+✅ Deployable to Vercel
+
+═══════════════════════════════════════════════════════════════════════════════
+
+PROJECT STRUCTURE
+
+smart-job-match-agent-free/
+
+├── api/
+│   ├── index.py
+│   ├── index.html
+│   └── jobs.json
+│
+├── services/
+│   ├── embeddings.py
+│   ├── matcher.py
+│   └── llm_agent.py
+│
+├── requirements.txt
+├── README.md
+├── QUICK_START.md
+└── vercel.json
+
+═══════════════════════════════════════════════════════════════════════════════
+
+ASSIGNMENT REQUIREMENTS COVERED
+
+Part 1: Embeddings & Similarity ✅
+- TF-IDF vectorization
+- Cosine similarity ranking
+- Top job recommendations
+
+Part 2: Resume Reasoning ✅
+- Resume parsing
+- Skill extraction
+- Match explanations
+
+Part 3: Clarifying Question ✅
+- Dynamic follow-up question generation
+
+Part 4: FastAPI REST API ✅
+- /recommend endpoint
+- /refine endpoint
+- /health endpoint
+
+Part 5: Deployment Ready ✅
+- Local execution
+- Compatible with Vercel deployment
+
+═══════════════════════════════════════════════════════════════════════════════
+
+RUNNING THE PROJECT
+
+After setup, start the server using:
+
+python -m uvicorn api.index:app --reload
+
+Then open:
+
+http://127.0.0.1:8000
+
+API documentation:
+
+http://127.0.0.1:8000/docs
+
+═══════════════════════════════════════════════════════════════════════════════
+
+NOTES
+
+• The project is intended for learning and demonstration purposes.
+• All processing happens locally on your machine.
+• No external AI API calls are required.
+
+═══════════════════════════════════════════════════════════════════════════════
+
+NEXT STEP
+
+➡ Open QUICK_START.md and follow the setup instructions.
+
+═══════════════════════════════════════════════════════════════════════════════

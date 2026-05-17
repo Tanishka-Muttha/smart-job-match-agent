@@ -1,0 +1,17 @@
+venv/
+env/
+.venv/
+
+__pycache__/
+*.py[cod]
+*.so
+
+.Python
+*.egg-info/
+dist/
+build/
+
+.env
+.pytest_cache/
+.DS_Store
+*.swp
