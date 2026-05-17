@@ -1,90 +1,94 @@
 """
-Simple embeddings using TF-IDF from scikit-learn.
-- NO downloads
-- NO API keys  
-- Works on ANY computer
-- 100% FREE
+Lightweight TF-IDF based embeddings using scikit-learn.
+Completely local and deployment friendly.
 """
-from sklearn.feature_extraction.text import TfidfVectorizer
-import numpy as np
+
 from typing import List
 
-# Global vectorizer - created once
-_vectorizer = None
-_all_texts = []
-_cache = {}
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+# Global vectorizer
+vectorizer = TfidfVectorizer(stop_words="english")
 
 
-def initialize_vectorizer(all_job_texts: List[str], resume_text: str):
+def generate_embedding(text: str) -> List[float]:
     """
-    Initialize the TF-IDF vectorizer with all texts.
-    This must be called once before ranking.
-    
-    Args:
-        all_job_texts: List of all job descriptions
-        resume_text: The resume text
+    Generate TF-IDF embedding for single text.
     """
-    global _vectorizer, _all_texts
-    
-    # Combine all texts for vocabulary
-    _all_texts = [resume_text] + all_job_texts
-    
-    # Create vectorizer (this is free, no downloads)
-    _vectorizer = TfidfVectorizer(
-        lowercase=True,
-        stop_words='english',
-        max_features=1000,
-        ngram_range=(1, 2)
+
+    if not text or not text.strip():
+        raise ValueError("Text cannot be empty")
+
+    embedding = vectorizer.fit_transform([text])
+
+    return embedding.toarray()[0].tolist()
+
+
+def generate_embeddings_batch(texts: List[str]) -> List[List[float]]:
+    """
+    Generate TF-IDF embeddings for multiple texts.
+    """
+
+    if not texts:
+        raise ValueError("Texts list cannot be empty")
+
+    valid_texts = [
+        t.strip()
+        for t in texts
+        if t and t.strip()
+    ]
+
+    if not valid_texts:
+        raise ValueError("No valid texts")
+
+    embeddings = vectorizer.fit_transform(valid_texts)
+
+    return embeddings.toarray().tolist()
+
+
+def create_job_text(job: dict) -> str:
+    """
+    Convert job into searchable text.
+    """
+
+    title = job.get("title", "")
+    skills = " ".join(job.get("skills", []))
+    description = job.get("description", "")
+    domain = job.get("domain", "")
+
+    combined = (
+        f"{title}. "
+        f"Skills: {skills}. "
+        f"Domain: {domain}. "
+        f"{description}"
     )
-    
-    # Fit on all texts
-    _vectorizer.fit(_all_texts)
+
+    return combined.strip()
 
 
-def get_embedding(text: str) -> List[float]:
+def create_resume_text(parsed_resume: dict) -> str:
     """
-    Get TF-IDF embedding for text.
-    Pure Python, NO downloads, NO APIs.
-    
-    Args:
-        text: Text to embed
-        
-    Returns:
-        Embedding vector as list
+    Convert parsed resume into searchable text.
     """
-    if _vectorizer is None:
-        raise ValueError("Vectorizer not initialized. Call initialize_vectorizer first.")
-    
-    # Check cache
-    cache_key = hash(text)
-    if cache_key in _cache:
-        return _cache[cache_key]
-    
-    # Transform text to TF-IDF vector
-    vector = _vectorizer.transform([text]).toarray()[0]
-    vector_list = vector.tolist()
-    
-    _cache[cache_key] = vector_list
-    return vector_list
 
+    skills = " ".join(parsed_resume.get("skills", []))
 
-def prepare_job_text(job: dict) -> str:
-    """Prepare job for embedding."""
-    parts = [
-        job.get("title", ""),
-        ", ".join(job.get("skills", [])),
-        job.get("description", ""),
-        job.get("domain", ""),
-    ]
-    return " ".join([p for p in parts if p])
+    preferred_roles = " ".join(
+        parsed_resume.get("preferred_roles", [])
+    )
 
+    education = parsed_resume.get("education", "")
 
-def prepare_resume_text(resume_data: dict) -> str:
-    """Prepare resume for embedding."""
-    parts = [
-        ", ".join(resume_data.get("skills", [])),
-        f"Experience: {resume_data.get('experience_years', 0)} years",
-        "Roles: " + ", ".join(resume_data.get("preferred_roles", [])),
-        resume_data.get("education", ""),
-    ]
-    return " ".join([p for p in parts if p])
+    experience = parsed_resume.get(
+        "experience_years",
+        0
+    )
+
+    combined = (
+        f"Skills: {skills}. "
+        f"Preferred roles: {preferred_roles}. "
+        f"Education: {education}. "
+        f"Experience: {experience} years."
+    )
+
+    return combined.strip()
