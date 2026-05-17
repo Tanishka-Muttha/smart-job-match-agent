@@ -1,338 +1,149 @@
-# Smart Job Match Agent - Local AI-Powered Job Recommendation System
+# Smart Job Match Agent – Lightweight NLP-Based Job Recommendation System
 
 A lightweight job recommendation system built using FastAPI, TF-IDF vectorization, cosine similarity, and rule-based reasoning.
 
-The project runs completely locally without requiring paid APIs or external AI services.
+The project runs locally without requiring paid APIs or external AI services.
 
 ---
 
-# Features
+## Features
 
 - Resume analysis and skill extraction
-- TF-IDF based job matching
+- TF-IDF based semantic matching
 - Cosine similarity ranking
 - Top 5 recommended jobs with match scores
-- Rule-based match explanations
-- Dynamic clarifying question generation
+- Match explanations
+- Clarifying question generation
 - Interactive web interface
-- FastAPI backend with REST APIs
-- Fully local and free to use
+- FastAPI REST APIs
+- Deployable on Vercel
 
 ---
 
-# Web Interface
+## Tech Stack
 
-After starting the server, open:
-
-```text
-http://localhost:8000
-```
-
-The interface allows users to:
-- paste resume text
-- analyze skills and experience
-- view recommended jobs
-- see match explanations
-- receive follow-up clarification questions
+- Python
+- FastAPI
+- Scikit-Learn
+- TF-IDF Vectorization
+- Cosine Similarity
+- HTML/CSS/JavaScript
+- Vercel
 
 ---
 
-# Quick Start
+## Quick Start
 
-## 1. Install Python
-
-Download Python 3.9 or higher:
-
-https://www.python.org/downloads/
-
-Verify installation:
-
-```bash
-python --version
-```
-
----
-
-## 2. Create Virtual Environment
+### 1. Create Virtual Environment
 
 ```bash
 python -m venv venv
 ```
 
-Activate environment:
+### 2. Activate Environment
 
-### Windows
+#### Windows
 
 ```bash
 venv\Scripts\activate
 ```
 
-### Mac/Linux
+#### Mac/Linux
 
 ```bash
 source venv/bin/activate
 ```
 
----
-
-## 3. Install Dependencies
+### 3. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
----
-
-## 4. Start the Server
+### 4. Start Server
 
 ```bash
 python -m uvicorn api.index:app --reload
 ```
 
-You should see:
-
-```text
-INFO:     Uvicorn running on http://127.0.0.1:8000
-```
-
 ---
 
-## 5. Open the Application
+## Open Application
 
-Open your browser and visit:
+Frontend UI:
 
-```text
+```bash
 http://localhost:8000
 ```
 
----
-
-# Example Resume Input
-
-```text
-Python developer with machine learning and SQL experience.
-Skills: Python, TensorFlow, FastAPI, SQL, Docker
-Interested in AI Engineer and Data Scientist roles.
-```
-
----
-
-# How the Project Works
-
-## Step 1: Resume Parsing
-
-The system extracts:
-- skills
-- experience
-- education
-- role preferences
-
-using rule-based text parsing.
-
----
-
-## Step 2: TF-IDF Vectorization
-
-Resume text and job descriptions are converted into TF-IDF vectors using scikit-learn.
-
----
-
-## Step 3: Similarity Matching
-
-Cosine similarity is used to compare resumes with available jobs.
-
-The system ranks the top matching jobs based on similarity score.
-
----
-
-## Step 4: Match Explanations
-
-Rule-based logic generates explanations describing why a job matches the candidate profile.
-
----
-
-## Step 5: Clarifying Question
-
-The system generates one follow-up question to better understand candidate preferences.
-
----
-
-# Project Flow
-
-```text
-Resume Input
-↓
-Resume Parsing
-↓
-TF-IDF Vectorization
-↓
-Cosine Similarity Matching
-↓
-Top Job Recommendations
-↓
-Match Explanations
-```
-
----
-
-# API Endpoints
-
-## POST /recommend
-
-Accepts resume text and returns:
-- parsed candidate profile
-- ranked jobs
-- match explanations
-- clarifying question
-
-Example request:
+Swagger API Docs:
 
 ```bash
-curl -X POST http://localhost:8000/recommend \
-  -H "Content-Type: application/json" \
-  -d '{"resume_text":"Python developer with SQL experience"}'
-```
-
----
-
-## POST /refine
-
-Optional endpoint for refining recommendations based on follow-up responses.
-
----
-
-## GET /health
-
-Checks whether the backend is running correctly.
-
----
-
-## GET /docs
-
-Interactive FastAPI Swagger documentation.
-
-Open:
-
-```text
 http://localhost:8000/docs
 ```
 
 ---
 
-# Assignment Requirements Covered
-
-## Part 1: Embeddings and Similarity
-
-- TF-IDF vectorization
-- Cosine similarity ranking
-- Top job recommendations
-
-## Part 2: Reasoning
-
-- Resume parsing
-- Rule-based explanations
-- Skill overlap analysis
-
-## Part 3: Clarifying Question
-
-- Dynamic question generation
-- Based on resume and recommendation patterns
-
-## Part 4: FastAPI API
-
-- REST API endpoints
-- Structured JSON responses
-- Error handling
-
-## Part 5: Deployment Ready
-
-- Runs locally
-- Compatible with Vercel deployment
-
----
-
-# Troubleshooting
-
-## "No module named fastapi"
-
-Run:
-
-```bash
-pip install -r requirements.txt
-```
-
----
-
-## "Port 8000 already in use"
-
-Run on another port:
-
-```bash
-python -m uvicorn api.index:app --reload --port 8001
-```
-
----
-
-## "jobs.json not found"
-
-Ensure the following file exists:
+## Example Resume Input
 
 ```text
-api/jobs.json
+Python developer with machine learning and SQL experience.
+Skills: Python, FastAPI, SQL, Docker, TensorFlow
+Interested in AI Engineer and Data Scientist roles.
 ```
 
 ---
 
-# Project Structure
+## How It Works
+
+1. Resume text is parsed using rule-based logic
+2. Resume and jobs are converted into TF-IDF vectors
+3. Cosine similarity compares resume with jobs
+4. Top matching jobs are ranked
+5. Match explanations and clarifying question are generated
+
+---
+
+## API Endpoints
+
+### POST `/recommend`
+
+Returns:
+- parsed profile
+- ranked jobs
+- match scores
+- explanations
+- clarifying question
+
+### GET `/health`
+
+Checks backend status.
+
+### GET `/docs`
+
+Interactive FastAPI Swagger documentation.
+
+---
+
+## Project Structure
 
 ```text
-smart-job-match-agent-free/
+smart-job-match-agent/
 │
 ├── api/
-│   ├── index.py
-│   ├── index.html
-│   └── jobs.json
-│
 ├── services/
-│   ├── embeddings.py
-│   ├── matcher.py
-│   └── llm_agent.py
-│
-├── requirements.txt
 ├── README.md
-├── QUICK_START.md
+├── WRITEUP.md
+├── requirements.txt
 └── vercel.json
 ```
 
 ---
 
-# Optional Deployment
+## Important Note
 
-Deploy to Vercel:
+Initially, transformer embeddings and external LLM APIs (Gemini/HuggingFace/OpenAI) were explored. However, due to free-tier API limits and deployment size constraints on Vercel, the final version uses a lightweight TF-IDF based architecture for stable deployment and fully free usage.
 
-```bash
-npm install -g vercel
-vercel login
-vercel --prod
-```
-
----
-
-# Technologies Used
-
-- Python
-- FastAPI
-- scikit-learn
-- TF-IDF Vectorization
-- Cosine Similarity
-- HTML/CSS/JavaScript
-
----
-
-# Final Note
-
-This project was designed to be simple, fully local, easy to run, and understandable for learning and demonstration purposes.
-
-It avoids dependency on paid AI APIs while still demonstrating core recommendation system concepts and backend engineering.
+The project still demonstrates semantic matching, recommendation ranking, backend engineering, deployment, and modular system design.
 
 🚀
