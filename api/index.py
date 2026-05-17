@@ -111,7 +111,7 @@ async def recommend(request: RecommendRequest) -> RecommendResponse:
         resume_data = parse_resume(request.resume_text)
         
         # Step 2: Rank jobs
-        ranked_jobs = rank_jobs(resume_data, JOBS, top_n=5)
+        ranked_jobs = rank_jobs(resume_data, JOBS, top_k=5)
         
         # Step 3: Generate explanations
         explanations = generate_match_explanations(resume_data, ranked_jobs)
@@ -167,7 +167,7 @@ async def refine(request: RefineRequest) -> RefineResponse:
         resume_data = parse_resume(request.resume_text)
         
         # Re-rank jobs
-        ranked_jobs = rank_jobs(resume_data, JOBS, top_n=5)
+        ranked_jobs = rank_jobs(resume_data, JOBS, top_k=5)
         
         # Generate explanations
         explanations = generate_match_explanations(resume_data, ranked_jobs)
