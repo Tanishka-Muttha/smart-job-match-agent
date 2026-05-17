@@ -1,53 +1,72 @@
 """
-Job matcher using cosine similarity on TF-IDF embeddings.
-100% FREE, pure Python, NO API calls.
+Job matching and ranking logic.
 """
-from typing import List
-import numpy as np
+
+from typing import List, Dict
+
 from sklearn.metrics.pairwise import cosine_similarity
-from services.embeddings import get_embedding, prepare_job_text, prepare_resume_text, initialize_vectorizer
+import numpy as np
+
+from services.embeddings import (
+    generate_embeddings_batch,
+    create_job_text,
+    create_resume_text
+)
 
 
 def rank_jobs(
-    resume_data: dict,
-    jobs: List[dict],
-    top_n: int = 5
-) -> List[dict]:
+    parsed_resume: dict,
+    jobs: List[Dict],
+    top_k: int = 5
+) -> List[Dict]:
     """
-    Rank jobs by semantic similarity to resume.
-    Completely FREE - pure Python, no APIs.
-    
-    Args:
-        resume_data: Parsed resume
-        jobs: List of job dicts
-        top_n: Number of top jobs to return
-        
-    Returns:
-        Top-N jobs with similarity scores
+    Rank jobs using cosine similarity.
     """
-    # Prepare texts
-    resume_text = prepare_resume_text(resume_data)
-    job_texts = [prepare_job_text(job) for job in jobs]
-    
-    # Initialize vectorizer with all texts (one-time setup)
-    initialize_vectorizer(job_texts, resume_text)
-    
-    # Get embeddings
-    resume_embedding = np.array(get_embedding(resume_text)).reshape(1, -1)
-    job_embeddings = np.array([get_embedding(text) for text in job_texts])
-    
-    # Compute cosine similarity
-    similarities = cosine_similarity(resume_embedding, job_embeddings)[0]
-    
-    # Create results
-    results = []
-    for job, score in zip(jobs, similarities):
-        results.append({
-            **job,
-            "similarity_score": float(score)
-        })
-    
-    # Sort by score
-    results.sort(key=lambda x: x["similarity_score"], reverse=True)
-    
-    return results[:top_n]
+
+    # Resume text
+    resume_text = create_resume_text(parsed_resume)
+
+    # Job texts
+    job_texts = [
+        create_job_text(job)
+        for job in jobs
+    ]
+
+    # Generate embeddings together
+    all_embeddings = generate_embeddings_batch(
+        [resume_text] + job_texts
+    )
+
+    resume_embedding = np.array(
+        all_embeddings[0]
+    ).reshape(1, -1)
+
+    job_embeddings = np.array(
+        all_embeddings[1:]
+    )
+
+    # Cosine similarity
+    similarities = cosine_similarity(
+        resume_embedding,
+        job_embeddings
+    )[0]
+
+    ranked_jobs = []
+
+    for idx, job in enumerate(jobs):
+
+        ranked_job = job.copy()
+
+        ranked_job["match_score"] = round(
+            float(similarities[idx]) * 100,
+            2
+        )
+
+        ranked_jobs.append(ranked_job)
+
+    ranked_jobs.sort(
+        key=lambda x: x["match_score"],
+        reverse=True
+    )
+
+    return ranked_jobs[:top_k]
